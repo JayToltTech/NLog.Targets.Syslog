@@ -88,7 +88,7 @@ namespace NLog.Targets.Syslog.MessageCreation
 
         private static string Pri(Facility facility, Severity severity)
         {
-            var priVal = (int)facility * 8 + (int)severity;
+            var priVal = ((int)facility * 8) + (int)severity;
             return $"<{priVal.ToString(CultureInfo.InvariantCulture)}>";
         }
     }

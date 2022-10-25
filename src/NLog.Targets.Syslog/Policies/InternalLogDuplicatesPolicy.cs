@@ -24,7 +24,7 @@ namespace NLog.Targets.Syslog.Policies
                 .Aggregate(string.Empty, (acc, cur) => $"{acc}, '{cur}'")
                 .TrimStart(',', ' ');
 
-            if (duplicates.Any())
+            if (duplicates.Length > 0)
                 InternalLogger.Trace("[Syslog] Found duplicates: {0}", duplicates);
         }
     }

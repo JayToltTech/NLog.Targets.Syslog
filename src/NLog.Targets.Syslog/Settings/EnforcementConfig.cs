@@ -85,6 +85,7 @@ namespace NLog.Targets.Syslog.Settings
         public void Dispose()
         {
             throttling.PropertyChanged -= throttlingPropsChanged;
+            GC.SuppressFinalize(this);
         }
     }
 }

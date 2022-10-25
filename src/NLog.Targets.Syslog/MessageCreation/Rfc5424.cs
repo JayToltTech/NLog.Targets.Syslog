@@ -67,7 +67,7 @@ namespace NLog.Targets.Syslog.MessageCreation
             var formatSb = new StringBuilder(BaseTimestampFormat, maxTimestampFormatLength);
 
             if (fractionalDigits <= 0)
-                return formatSb.Append("K");
+                return formatSb.Append('K');
 
             var fRepeatCount = Math.Min(fractionalDigits, DotNetDateTimeMaxFractionalDigits);
             var requestedMinusDotNet = fractionalDigits - DotNetDateTimeMaxFractionalDigits;
@@ -77,7 +77,7 @@ namespace NLog.Targets.Syslog.MessageCreation
                 .Append('.')
                 .Append('f', fRepeatCount)
                 .Append('0', zeroRepeatCount)
-                .Append("K");
+                .Append('K');
         }
 
         private void AppendHeader(ByteArray buffer, string pri, LogEventInfo logEvent)

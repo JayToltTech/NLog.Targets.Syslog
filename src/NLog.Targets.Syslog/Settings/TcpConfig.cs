@@ -76,6 +76,7 @@ namespace NLog.Targets.Syslog.Settings
         /// <summary>Disposes the instance</summary>
         public void Dispose()
         {
+            GC.SuppressFinalize(this);
             keepAlive.PropertyChanged -= keepAlivePropsChanged;
             tls.PropertyChanged -= tlsPropsChanged;
         }

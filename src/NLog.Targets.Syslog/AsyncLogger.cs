@@ -41,7 +41,7 @@ namespace NLog.Targets.Syslog
             flushCompletionMarker = new LogEventInfo(LogLevel.Off, string.Empty, nameof(flushCompletionMarker));
             Task.Run(() => ProcessQueueAsync(messageBuilder));
             processWithTimeoutAction = (asyncLogEventInfo, timeout) => Enqueue(asyncLogEventInfo, timeout);
-            discardAction = asyncLogEventInfo => asyncLogEventInfo.Continuation(new InvalidOperationException($"Enqueue skipped"));
+            discardAction = asyncLogEventInfo => asyncLogEventInfo.Continuation(new InvalidOperationException("Enqueue skipped"));
         }
 
         public void Log(AsyncLogEventInfo asyncLogEventInfo)
@@ -125,7 +125,7 @@ namespace NLog.Targets.Syslog
             }
 
             if (!enqueued)
-                asyncLogEventInfo.Continuation(new InvalidOperationException($"Failed enqueuing"));
+                asyncLogEventInfo.Continuation(new InvalidOperationException("Failed enqueuing"));
         }
 
         public void Dispose()

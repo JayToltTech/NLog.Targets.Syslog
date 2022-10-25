@@ -57,6 +57,7 @@ namespace NLog.Targets.Syslog.Settings
                 x.Dispose();
             });
             sdElements.CollectionChanged -= sdElementsCollectionChanged;
+            GC.SuppressFinalize(this);
         }
     }
 }

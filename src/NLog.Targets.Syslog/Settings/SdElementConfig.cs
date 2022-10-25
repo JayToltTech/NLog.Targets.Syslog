@@ -52,6 +52,7 @@ namespace NLog.Targets.Syslog.Settings
         {
             sdParams.ForEach(x => x.PropertyChanged -= sdParamPropsChanged);
             sdParams.CollectionChanged -= sdParamsCollectionChanged;
+            GC.SuppressFinalize(this);
         }
     }
 }

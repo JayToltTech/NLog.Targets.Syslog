@@ -28,9 +28,11 @@ namespace NLog.Targets.Syslog.Policies
         public string Apply(string s, string searchFor)
         {
             var afterBasicPolicies = s;
-            foreach (var policy in basicPolicies)
-                if (policy.IsApplicable())
+            foreach (var policy in basicPolicies) {
+                if (policy.IsApplicable()) {
                     afterBasicPolicies = policy.Apply(afterBasicPolicies);
+                }
+            }
 
             return replaceComputedValuePolicy.IsApplicable() ?
                 replaceComputedValuePolicy.Apply(afterBasicPolicies, searchFor) :
