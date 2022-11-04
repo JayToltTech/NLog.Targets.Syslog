@@ -111,6 +111,7 @@ namespace NLog.Targets.Syslog.Settings
         {
             structuredData.PropertyChanged -= structuredDataPropsChanged;
             structuredData.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         private static string HostFqdn()

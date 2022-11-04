@@ -112,6 +112,7 @@ namespace NLog.Targets.Syslog.Settings
             exponentialBackoff.PropertyChanged -= exponentialBackoffPropsChanged;
             awsJitteredExponentialBackoff.PropertyChanged -= awsJitteredExponentialBackoffPropsChanged;
             pollyJitteredExponentialBackoff.PropertyChanged -= pollyJitteredExponentialBackoffPropsChanged;
+            GC.SuppressFinalize(this);
         }
     }
 }

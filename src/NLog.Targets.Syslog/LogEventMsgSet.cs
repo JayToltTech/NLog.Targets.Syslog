@@ -15,7 +15,7 @@ namespace NLog.Targets.Syslog
 {
     internal class LogEventMsgSet
     {
-        private AsyncLogEventInfo asyncLogEventInfo;
+        private readonly AsyncLogEventInfo asyncLogEventInfo;
         private readonly ByteArray buffer;
         private readonly MessageBuilder messageBuilder;
         private readonly MessageTransmitter messageTransmitter;

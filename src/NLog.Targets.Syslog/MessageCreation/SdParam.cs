@@ -40,7 +40,7 @@ namespace NLog.Targets.Syslog.MessageCreation
 
         public static string ToString(IEnumerable<SdParam> sdParams)
         {
-            return sdParams.Aggregate(string.Empty, (acc, cur) => $"{acc} {cur.ToString()}");
+            return sdParams.Aggregate(string.Empty, (acc, cur) => $"{acc} {cur}");
         }
 
         public override string ToString()

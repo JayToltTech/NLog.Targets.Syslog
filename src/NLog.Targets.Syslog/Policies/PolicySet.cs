@@ -22,9 +22,11 @@ namespace NLog.Targets.Syslog.Policies
         public string Apply(string s)
         {
             var afterApplication = s;
-            foreach (var policy in policies)
+            foreach (var policy in policies) {
                 if (policy.IsApplicable())
                     afterApplication = policy.Apply(afterApplication);
+            }
+
             return afterApplication;
         }
     }

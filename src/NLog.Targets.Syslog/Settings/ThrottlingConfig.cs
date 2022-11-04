@@ -18,7 +18,6 @@ namespace NLog.Targets.Syslog.Settings
             get => limit;
             set
             {
-
                 if (value >= 1)
                 {
                     SetProperty(ref limit, value);

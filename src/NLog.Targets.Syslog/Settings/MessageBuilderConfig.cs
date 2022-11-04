@@ -82,6 +82,7 @@ namespace NLog.Targets.Syslog.Settings
             rfc3164.PropertyChanged -= rfc3164PropsChanged;
             rfc5424.PropertyChanged -= rfc5424PropsChanged;
             rfc5424.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

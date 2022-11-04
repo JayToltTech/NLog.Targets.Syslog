@@ -72,6 +72,7 @@ namespace NLog.Targets.Syslog.Settings
             tcp.PropertyChanged -= tcpPropsChanged;
             retry.Dispose();
             tcp.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

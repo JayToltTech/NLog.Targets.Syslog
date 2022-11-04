@@ -114,8 +114,8 @@ namespace NLog.Targets.Syslog.MessageSend
         {
             return Dns
                 .GetHostAddresses(Server)
-                .Where(ipAddress => ipAddress.AddressFamily == AddressFamily.InterNetwork && Socket.OSSupportsIPv4 ||
-                                    ipAddress.AddressFamily == AddressFamily.InterNetworkV6 && Socket.OSSupportsIPv6)
+                .Where(ipAddress => (ipAddress.AddressFamily == AddressFamily.InterNetwork && Socket.OSSupportsIPv4) ||
+                                    (ipAddress.AddressFamily == AddressFamily.InterNetworkV6 && Socket.OSSupportsIPv6))
                 .OrderBy(x => x.AddressFamily)
                 .Select(x => new IPEndPoint(x, Port))
                 .FirstOrDefault();

@@ -13,7 +13,7 @@ namespace NLog.Targets.Syslog.MessageCreation
         private static readonly string[] TimeQualityParamNames = { "tzKnown", "isSynced", "syncAccuracy" };
         private static readonly string[] OriginParamNames = { "ip", "enterpriseId", "software", "swVersion" };
         private static readonly string[] MetaParamNames = { "sequenceId", "sysUpTime", "language" };
-        private const string InvalidIanaParamName = @"^(?!^(?:{0})$).*$";
+        private const string InvalidIanaParamName = "^(?!^(?:{0})$).*$";
         private static readonly Dictionary<string, string> InvalidIanaParamNames = new Dictionary<string, string>
         {
             { TimeQuality, BuildInvalidIanaParamNamePattern(TimeQualityParamNames) },
