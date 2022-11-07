@@ -41,7 +41,7 @@ namespace NLog.Targets.Syslog.MessageCreation
             procIdLayout = rfc5424Config.ProcId;
             msgIdLayout = rfc5424Config.MsgId;
             structuredData = new StructuredData(rfc5424Config.StructuredData, enforcementConfig);
-            preamble = rfc5424Config.DisableBom ? new byte[0] : Encoding.UTF8.GetPreamble();
+            preamble = rfc5424Config.DisableBom ? Array.Empty<byte>() : Encoding.UTF8.GetPreamble();
             hostnamePolicySet = new FqdnHostnamePolicySet(enforcementConfig, rfc5424Config.DefaultHostname);
             appNamePolicySet = new AppNamePolicySet(enforcementConfig, rfc5424Config.DefaultAppName);
             procIdPolicySet = new ProcIdPolicySet(enforcementConfig);

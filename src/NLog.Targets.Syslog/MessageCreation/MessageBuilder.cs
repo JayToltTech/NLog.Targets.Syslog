@@ -16,7 +16,7 @@ namespace NLog.Targets.Syslog.MessageCreation
     {
         private static readonly Dictionary<RfcNumber, Func<MessageBuilderConfig, EnforcementConfig, MessageBuilder>> BuilderFactory;
         private static readonly Dictionary<Facility, Dictionary<Severity, string>> PriForFacilityAndSeverity;
-        private static readonly string[] NoEntries = new string[0];
+        private static readonly string[] NoEntries = Array.Empty<string>();
 
         [ThreadStatic]
         private static string[] singleEntry;
