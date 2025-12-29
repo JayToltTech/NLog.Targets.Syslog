@@ -7,7 +7,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.Policies
 {
-    internal class SplitOnNewLinePolicy : IBasicPolicy<string, string[]>
+    internal sealed class SplitOnNewLinePolicy : IBasicPolicy<string, string[]>
     {
         private readonly EnforcementConfig enforcementConfig;
         private static readonly char[] LineSeps = { '\r', '\n' };

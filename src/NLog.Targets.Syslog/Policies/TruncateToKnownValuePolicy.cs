@@ -6,7 +6,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.Policies
 {
-    internal class TruncateToKnownValuePolicy : IBasicPolicy<string, string>
+    internal sealed class TruncateToKnownValuePolicy : IBasicPolicy<string, string>
     {
         private readonly EnforcementConfig enforcementConfig;
         private readonly int maxLength;

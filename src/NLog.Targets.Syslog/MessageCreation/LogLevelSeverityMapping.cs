@@ -6,7 +6,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.MessageCreation
 {
-    internal class LogLevelSeverityMapping
+    internal sealed class LogLevelSeverityMapping
     {
         private readonly IDictionary<LogLevel, Severity> logLevelSeverityMapping;
 

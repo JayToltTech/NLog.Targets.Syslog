@@ -17,7 +17,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.MessageSend
 {
-    internal class Tcp : MessageTransmitter
+    internal sealed class Tcp : MessageTransmitter
     {
         private static readonly byte[] LineFeedBytes = { 0x0A };
         private static readonly SocketInitialization SocketInitialization = SocketInitialization.ForCurrentOs();
@@ -73,7 +73,9 @@ namespace NLog.Targets.Syslog.MessageSend
 
             // Do not dispose TcpClient inner stream when disposing SslStream (TcpClient disposes it)
             var sslStream = new SslStream(tcpStream, true);
+#pragma warning disable CA5398 // TLS 1.2 minimum is intentional for security
             sslStream.AuthenticateAsClient(Server, retrieveClientCertificates(), SslProtocols.Tls12, false);
+#pragma warning restore CA5398
 
             return sslStream;
         }
@@ -87,7 +89,7 @@ namespace NLog.Targets.Syslog.MessageSend
             }
 
             var octetCount = message.Length;
-            var prefix = Encoding.ASCII.GetBytes(string.Concat(octetCount.ToString(), " "));
+            var prefix = Encoding.ASCII.GetBytes(string.Concat(octetCount.ToString(System.Globalization.CultureInfo.InvariantCulture), " "));
             return stream.WriteAsync(prefix, 0, prefix.Length);
         }
 

@@ -11,7 +11,7 @@ using System.Text;
 
 namespace NLog.Targets.Syslog.MessageCreation
 {
-    internal class Rfc5424 : MessageBuilder
+    internal sealed class Rfc5424 : MessageBuilder
     {
         private const string BaseTimestampFormat = "yyyy-MM-ddTHH:mm:ss";
         private const int Iso8601MaxTimestampFractionalDigits = 16;

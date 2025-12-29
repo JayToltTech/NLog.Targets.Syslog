@@ -15,12 +15,13 @@ namespace NLog.Targets.Syslog.MessageSend
         }
 
         [DllImport("libc", EntryPoint = "setsockopt")]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
         private static extern unsafe int SetSockOptSysCall(IntPtr socketFileDescriptor, int optionLevel, int optionName, byte* optionValue, int optionLen);
 
         private static void ThrowOnError(int error)
         {
             if (error != 0)
-                throw new ApplicationException($"Socket option syscall error value: '{error}'");
+                throw new InvalidOperationException($"Socket option syscall error value: '{error}'");
         }
     }
 }

@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace NLog.Targets.Syslog.MessageCreation
 {
-    internal class SdParam
+    internal sealed class SdParam
     {
         private static readonly byte[] SpaceBytes = { 0x20 };
         private static readonly byte[] EqualBytes = { 0x3D };

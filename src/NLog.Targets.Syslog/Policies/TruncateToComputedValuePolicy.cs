@@ -8,7 +8,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.Policies
 {
-    internal class TruncateToComputedValuePolicy
+    internal sealed class TruncateToComputedValuePolicy
     {
         // RFC 5426 (UDP/IPv6) with jumbograms: (2^32 - 1) - 40 - 8 = 4294967247
         private const long MaxLengthNotToBeExceeded = 4294967247;

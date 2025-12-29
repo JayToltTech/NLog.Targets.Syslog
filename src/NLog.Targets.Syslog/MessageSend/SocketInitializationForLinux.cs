@@ -6,7 +6,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.MessageSend
 {
-    internal class SocketInitializationForLinux : SocketInitialization
+    internal sealed class SocketInitializationForLinux : SocketInitialization
     {
         // SOCKET OPTION NAME CONSTANT
         // https://github.com/torvalds/linux/blob/v4.16/include/uapi/asm-generic/socket.h

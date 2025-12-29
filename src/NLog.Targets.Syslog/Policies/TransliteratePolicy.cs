@@ -6,7 +6,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.Policies
 {
-    internal class TransliteratePolicy : IBasicPolicy<string, string>
+    internal sealed class TransliteratePolicy : IBasicPolicy<string, string>
     {
         private readonly EnforcementConfig enforcementConfig;
 

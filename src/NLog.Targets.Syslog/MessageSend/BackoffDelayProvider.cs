@@ -9,7 +9,7 @@ using Polly.Contrib.WaitAndRetry;
 
 namespace NLog.Targets.Syslog.MessageSend
 {
-    internal class BackoffDelayProvider
+    internal sealed class BackoffDelayProvider
     {
         private static readonly Dictionary<BackoffType, Func<RetryConfig, BackoffDelayProvider>> BackoffFactory;
         private readonly IEnumerable<TimeSpan> delaysEnumerable;

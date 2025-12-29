@@ -5,7 +5,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.Policies
 {
-    internal class FqdnHostnamePolicySet : PolicySet
+    internal sealed class FqdnHostnamePolicySet : PolicySet
     {
         private const string NonPrintUsAscii = @"[^\u0021-\u007E]";
         private const string QuestionMark = "?";

@@ -8,7 +8,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.MessageCreation
 {
-    internal class SdId
+    internal sealed class SdId
     {
         private readonly SimpleLayout layout;
         private readonly SdIdPolicySet sdIdPolicySet;

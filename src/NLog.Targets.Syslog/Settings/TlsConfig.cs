@@ -96,7 +96,7 @@ namespace NLog.Targets.Syslog.Settings
                 case X509FindType.FindByTimeNotYetValid:
                 case X509FindType.FindByTimeValid:
                 {
-                    return DateTime.Parse(certificateFilterValue);
+                    return DateTime.Parse(certificateFilterValue, System.Globalization.CultureInfo.InvariantCulture);
                 }
                 case X509FindType.FindByKeyUsage:
                 {

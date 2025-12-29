@@ -48,14 +48,14 @@ namespace NLog.Targets.Syslog
         }
 
         /// <summary>Writes a single event</summary>
-        /// <param name="asyncLogEventInfo">The NLog.AsyncLogEventInfo</param>
+        /// <param name="logEvent">The NLog.AsyncLogEventInfo</param>
         /// <remarks>Write(LogEventInfo) is called only by Write(AsyncLogEventInfo/AsyncLogEventInfo[]): no need to override it</remarks>
-        protected override void Write(AsyncLogEventInfo asyncLogEventInfo)
+        protected override void Write(AsyncLogEventInfo logEvent)
         {
-            var logEvent = asyncLogEventInfo.LogEvent;
-            PrecalculateVolatileLayouts(logEvent);
+            var logEventInfo = logEvent.LogEvent;
+            PrecalculateVolatileLayouts(logEventInfo);
             var asyncLoggerId = System.Threading.Interlocked.Increment(ref _logCounter) % Enforcement.MessageProcessors;
-            asyncLoggers[asyncLoggerId].Log(asyncLogEventInfo);
+            asyncLoggers[asyncLoggerId].Log(logEvent);
         }
 
         /// <summary>Flushes any pending log message</summary>
@@ -70,7 +70,7 @@ namespace NLog.Targets.Syslog
                     var exception = t.Exception?.GetBaseException();
                     InternalLogger.Debug(exception, "[Syslog] Explicit flush completed");
                     asyncContinuation(exception);
-                });
+                }, TaskScheduler.Default);
         }
 
         /// <summary>Closes the target</summary>

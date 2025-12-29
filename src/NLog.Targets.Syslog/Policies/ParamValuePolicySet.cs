@@ -6,7 +6,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.Policies
 {
-    internal class ParamValuePolicySet : PolicySet
+    internal sealed class ParamValuePolicySet : PolicySet
     {
         private const string InvalidParamValuePattern = @"([^\\""\]]*)([\\""\]])([^\\""\]]*)";
         private const string InvalidParamValueReplacement = "$1\\$2$3";

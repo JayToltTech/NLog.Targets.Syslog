@@ -6,7 +6,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.MessageSend
 {
-    internal class SocketInitializationForOsx : SocketInitialization
+    internal sealed class SocketInitializationForOsx : SocketInitialization
     {
         // SOCKET OPTION NAME CONSTANT
         // https://opensource.apple.com/source/xnu/xnu-4570.41.2/bsd/sys/socket.h.auto.html

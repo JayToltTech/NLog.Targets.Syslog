@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace NLog.Targets.Syslog.Policies
 {
-    internal class ParamNamePolicySet
+    internal sealed class ParamNamePolicySet
     {
         private const string NonSafePrintUsAscii = @"[^\u0022\u003D\u005D\u0020-\u007E]";
         private const int ParamNameMaxLength = 32;

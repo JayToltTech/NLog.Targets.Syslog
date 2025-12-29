@@ -6,7 +6,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.Policies
 {
-    internal class ContentPolicySet : PolicySet
+    internal sealed class ContentPolicySet : PolicySet
     {
         private const string NonSpaceOrPrintUsAscii = @"[^\u0020-\u007E]";
         private const string QuestionMark = "?";

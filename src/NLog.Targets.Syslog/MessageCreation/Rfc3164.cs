@@ -10,7 +10,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.MessageCreation
 {
-    internal class Rfc3164 : MessageBuilder
+    internal sealed class Rfc3164 : MessageBuilder
     {
         private const string TimestampFormat = "{0:MMM} {0,11:d HH:mm:ss}";
         private static readonly byte[] SpaceBytes = { 0x20 };

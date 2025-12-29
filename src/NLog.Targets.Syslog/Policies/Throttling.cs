@@ -8,7 +8,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.Policies
 {
-    internal class Throttling
+    internal sealed class Throttling
     {
         public int Limit { get; }
 

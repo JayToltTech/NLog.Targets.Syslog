@@ -5,7 +5,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.Policies
 {
-    internal class TagPolicySet : PolicySet
+    internal sealed class TagPolicySet : PolicySet
     {
         private const string NonAlphaNumeric = "[^a-zA-Z0-9]";
         private const string QuestionMark = "?";

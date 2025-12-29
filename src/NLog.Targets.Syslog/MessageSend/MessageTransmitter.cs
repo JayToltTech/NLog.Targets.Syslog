@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -17,7 +18,7 @@ using ProtocolType = NLog.Targets.Syslog.Settings.ProtocolType;
 
 namespace NLog.Targets.Syslog.MessageSend
 {
-    internal abstract class MessageTransmitter
+    internal abstract class MessageTransmitter : IDisposable
     {
         private static readonly Dictionary<ProtocolType, Func<MessageTransmitterConfig, MessageTransmitter>> TransmitterFactory;
 
@@ -128,7 +129,11 @@ namespace NLog.Targets.Syslog.MessageSend
                 if (isReady)
                     Terminate();
             }
-            catch (Exception exception)
+            catch (SocketException exception)
+            {
+                InternalLogger.Warn(exception, "[Syslog] Terminate failed");
+            }
+            catch (IOException exception)
             {
                 InternalLogger.Warn(exception, "[Syslog] Terminate failed");
             }

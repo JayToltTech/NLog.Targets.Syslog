@@ -8,7 +8,7 @@ using NLog.Common;
 
 namespace NLog.Targets.Syslog.Policies
 {
-    internal class InternalLogDuplicatesPolicy
+    internal sealed class InternalLogDuplicatesPolicy
     {
         public bool IsApplicable()
         {

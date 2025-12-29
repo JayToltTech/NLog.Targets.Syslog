@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace NLog.Targets.Syslog.Policies
 {
-    internal class ReplaceKnownValuePolicy : IBasicPolicy<string, string>
+    internal sealed class ReplaceKnownValuePolicy : IBasicPolicy<string, string>
     {
         private readonly EnforcementConfig enforcementConfig;
         private readonly string searchFor;

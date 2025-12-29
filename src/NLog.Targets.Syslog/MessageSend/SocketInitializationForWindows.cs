@@ -9,7 +9,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.MessageSend
 {
-    internal class SocketInitializationForWindows : SocketInitialization
+    internal sealed class SocketInitializationForWindows : SocketInitialization
     {
         private const int DefaultRetryCount = 10;
         private const int DefaultTime = 7200;
@@ -100,7 +100,7 @@ namespace NLog.Targets.Syslog.MessageSend
                     setKeepAliveSetting(tcp.Client);
                     return true;
                 }
-                catch
+                catch (SocketException)
                 {
                     return false;
                 }

@@ -6,7 +6,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.Policies
 {
-    internal class SdIdPolicySet : PolicySet
+    internal sealed class SdIdPolicySet : PolicySet
     {
         private const string TimeQuality = "timeQuality";
         private const string Origin = "origin";

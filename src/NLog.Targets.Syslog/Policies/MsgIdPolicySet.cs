@@ -5,7 +5,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.Policies
 {
-    internal class MsgIdPolicySet : PolicySet
+    internal sealed class MsgIdPolicySet : PolicySet
     {
         private const string NilValue = "-";
         private const string NonPrintUsAscii = @"[^\u0021-\u007E]";

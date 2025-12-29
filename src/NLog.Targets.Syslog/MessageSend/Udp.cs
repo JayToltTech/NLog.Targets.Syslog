@@ -10,7 +10,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.MessageSend
 {
-    internal class Udp : MessageTransmitter
+    internal sealed class Udp : MessageTransmitter
     {
         private UdpClient udp;
 

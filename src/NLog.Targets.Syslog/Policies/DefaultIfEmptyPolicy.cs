@@ -5,7 +5,7 @@ using NLog.Common;
 
 namespace NLog.Targets.Syslog.Policies
 {
-    internal class DefaultIfEmptyPolicy : IBasicPolicy<string, string>
+    internal sealed class DefaultIfEmptyPolicy : IBasicPolicy<string, string>
     {
         private readonly string defaultValue;
 

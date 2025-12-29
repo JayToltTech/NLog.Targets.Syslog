@@ -9,7 +9,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.MessageCreation
 {
-    internal class SdElement
+    internal sealed class SdElement
     {
         private static readonly InternalLogDuplicatesPolicy LogDuplicatesPolicy = new InternalLogDuplicatesPolicy();
         private static readonly byte[] LeftBracketBytes = { 0x5B };

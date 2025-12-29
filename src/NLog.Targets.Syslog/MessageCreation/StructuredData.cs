@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace NLog.Targets.Syslog.MessageCreation
 {
-    internal class StructuredData
+    internal sealed class StructuredData
     {
         private const string NilValue = "-";
         private static readonly byte[] NilValueBytes = { 0x2D };

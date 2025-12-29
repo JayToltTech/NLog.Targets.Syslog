@@ -7,7 +7,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.Policies
 {
-    internal class ReplaceComputedValuePolicy
+    internal sealed class ReplaceComputedValuePolicy
     {
         private readonly EnforcementConfig enforcementConfig;
         private readonly string replaceWith;

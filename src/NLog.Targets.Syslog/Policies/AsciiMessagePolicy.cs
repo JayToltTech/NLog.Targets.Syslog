@@ -6,7 +6,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog.Policies
 {
-    internal class AsciiMessagePolicy
+    internal sealed class AsciiMessagePolicy
     {
         private const bool AssumeAsciiEncoding = true;
         private readonly TruncateToComputedValuePolicy truncatePolicy;

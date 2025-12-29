@@ -7,7 +7,7 @@ using System.Text;
 
 namespace NLog.Targets.Syslog.MessageStorage
 {
-    internal class ByteArray : IDisposable
+    internal sealed class ByteArray : IDisposable
     {
         private const int Zero = 0;
         private const int DefaultBufferCapacity = 65535;
@@ -34,7 +34,7 @@ namespace NLog.Targets.Syslog.MessageStorage
             get
             {
                 if (index >= Length)
-                    throw new IndexOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(index));
 
                 return memoryStream.GetBuffer()[index];
             }

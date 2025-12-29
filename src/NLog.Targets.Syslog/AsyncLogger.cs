@@ -16,7 +16,7 @@ using NLog.Targets.Syslog.Settings;
 
 namespace NLog.Targets.Syslog
 {
-    internal class AsyncLogger
+    internal sealed class AsyncLogger
     {
         private readonly Layout layout;
         private readonly Throttling throttling;
