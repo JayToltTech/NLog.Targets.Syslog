@@ -78,11 +78,15 @@ namespace NLog.Targets.Syslog.Settings
             set => SetProperty(ref clientCertificate, value);
         }
 
-        /// <summary>Path to a CA certificate (PEM or DER) the server certificate chain must terminate at</summary>
+        /// <summary>Path to a CA certificate file the server certificate chain must terminate at</summary>
         /// <remarks>
         /// When set, the server certificate is validated by pinning: the presented chain must build to
         /// this exact CA, independent of the operating system trust store. When omitted the default
         /// platform validation (OS trust store) is used.
+        /// The file is loaded via <see cref="X509Certificate2" />: DER-encoded certificates (.cer/.crt)
+        /// work on all targets; PEM is accepted on .NET Framework/Windows but is not guaranteed on every
+        /// netstandard2.0 runtime, so prefer DER for portability (or supply <see cref="PinnedCaCertificate" />
+        /// directly).
         /// </remarks>
         public string PinnedCaCertificatePath
         {
@@ -144,9 +148,12 @@ namespace NLog.Targets.Syslog.Settings
         internal RemoteCertificateValidationCallback BuildServerCertificateValidationCallback()
         {
             // A directly-supplied CA (e.g. embedded in the application) takes precedence over a path.
-            // Loaded once, at configuration time, so a bad path fails fast and closed.
-            var pinnedCa = pinnedCaCertificate ??
-                (string.IsNullOrEmpty(pinnedCaCertificatePath) ? null : new X509Certificate2(pinnedCaCertificatePath));
+            // Load a path-based CA once and cache it in the field, so repeated calls reuse it (no
+            // repeated file IO) and a bad path fails fast and closed. Callers should only invoke this
+            // when TLS is enabled (see Tcp), so an unused/invalid path can't fail config while TLS is off.
+            if (pinnedCaCertificate == null && !string.IsNullOrEmpty(pinnedCaCertificatePath))
+                pinnedCaCertificate = new X509Certificate2(pinnedCaCertificatePath);
+            var pinnedCa = pinnedCaCertificate;
             if (pinnedCa == null)
                 return null;
 
@@ -170,7 +177,16 @@ namespace NLog.Targets.Syslog.Settings
                     // via ExtraStore and tolerate the resulting "untrusted root" status, which
                     // we replace with an explicit pin check below.
                     pinnedChain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllowUnknownCertificateAuthority;
+                    // Seed ExtraStore with the pinned CA and any certificates the server presented (via
+                    // the chain SslStream already built). Without the latter, a server that omits
+                    // intermediates would yield a spurious PartialChain and be rejected even though it
+                    // chains to the pinned CA.
                     pinnedChain.ChainPolicy.ExtraStore.Add(pinnedCa);
+                    if (chain != null)
+                    {
+                        foreach (var providedElement in chain.ChainElements)
+                            pinnedChain.ChainPolicy.ExtraStore.Add(providedElement.Certificate);
+                    }
 
                     pinnedChain.Build(serverCert);
 

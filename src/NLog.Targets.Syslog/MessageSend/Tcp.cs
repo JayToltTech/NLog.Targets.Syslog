@@ -35,7 +35,9 @@ namespace NLog.Targets.Syslog.MessageSend
             keepAliveConfig = tcpConfig.KeepAlive;
             useTls = tcpConfig.Tls.Enabled;
             retrieveClientCertificates = tcpConfig.Tls.RetrieveClientCertificates;
-            serverCertificateValidationCallback = tcpConfig.Tls.BuildServerCertificateValidationCallback();
+            // Only build the pinning callback when TLS is enabled, so an unused/invalid pinned-CA path
+            // can't cause a configuration-time failure while TLS is off.
+            serverCertificateValidationCallback = useTls ? tcpConfig.Tls.BuildServerCertificateValidationCallback() : null;
             framing = tcpConfig.Framing;
         }
 
