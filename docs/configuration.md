@@ -155,4 +155,5 @@ The maximum length of a message is detailed in many RFCs that can be summarized 
        - `certificateStoreName` - the X.509 certificate store [name](https://msdn.microsoft.com/en-us/library/system.security.cryptography.x509certificates.storename.aspx) (default `My`)
        - `certificateFilterType` - the [type of filter](https://msdn.microsoft.com/en-us/library/system.security.cryptography.x509certificates.x509findtype.aspx) to apply to the certificate collection (default `FindBySubjectName`)
        - `certificateFilterValue` - the value against which to filter the certificate collection
+       - `pinnedCaCertificatePath` - path to a CA certificate (PEM or DER) the server certificate chain must terminate at; when set, the server certificate is validated by pinning to this CA independently of the OS trust store; when omitted default platform validation is used (default: none)
     - `framing` - `nonTransparent` or `octectCounting` (default: `octectCounting`)

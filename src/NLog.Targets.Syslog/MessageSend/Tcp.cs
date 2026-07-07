@@ -25,6 +25,7 @@ namespace NLog.Targets.Syslog.MessageSend
         private readonly KeepAliveConfig keepAliveConfig;
         private readonly bool useTls;
         private readonly Func<X509Certificate2Collection> retrieveClientCertificates;
+        private readonly RemoteCertificateValidationCallback serverCertificateValidationCallback;
         private readonly FramingMethod framing;
         private TcpClient tcp;
         private Stream stream;
@@ -34,6 +35,7 @@ namespace NLog.Targets.Syslog.MessageSend
             keepAliveConfig = tcpConfig.KeepAlive;
             useTls = tcpConfig.Tls.Enabled;
             retrieveClientCertificates = tcpConfig.Tls.RetrieveClientCertificates;
+            serverCertificateValidationCallback = tcpConfig.Tls.BuildServerCertificateValidationCallback();
             framing = tcpConfig.Framing;
         }
 
@@ -72,7 +74,9 @@ namespace NLog.Targets.Syslog.MessageSend
                 return tcpStream;
 
             // Do not dispose TcpClient inner stream when disposing SslStream (TcpClient disposes it)
-            var sslStream = new SslStream(tcpStream, true);
+            var sslStream = serverCertificateValidationCallback == null
+                ? new SslStream(tcpStream, true)
+                : new SslStream(tcpStream, true, serverCertificateValidationCallback);
 #pragma warning disable CA5398 // TLS 1.2 minimum is intentional for security
             sslStream.AuthenticateAsClient(Server, retrieveClientCertificates(), SslProtocols.Tls12, false);
 #pragma warning restore CA5398
