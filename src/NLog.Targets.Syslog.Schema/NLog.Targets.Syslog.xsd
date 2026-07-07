@@ -237,6 +237,7 @@
                                                         <xs:element name="certificateStoreName" type="xs:string" minOccurs="0" maxOccurs="1" />
                                                         <xs:element name="certificateFilterType" type="xs:string" minOccurs="0" maxOccurs="1" />
                                                         <xs:element name="certificateFilterValue" type="xs:string" minOccurs="0" maxOccurs="1" />
+                                                        <xs:element name="pinnedCaCertificatePath" type="xs:string" minOccurs="0" maxOccurs="1" />
                                                     </xs:all>
                                                     <xs:attribute name="enabled" type="xs:boolean" />
                                                     <xs:attribute name="useClientCertificates" type="xs:boolean" />
@@ -244,6 +245,7 @@
                                                     <xs:attribute name="certificateStoreName" type="xs:string" />
                                                     <xs:attribute name="certificateFilterType" type="xs:string" />
                                                     <xs:attribute name="certificateFilterValue" type="xs:string" />
+                                                    <xs:attribute name="pinnedCaCertificatePath" type="xs:string" />
                                                 </xs:complexType>
                                             </xs:element>
                                             <xs:element name="framing" type="xs:string" minOccurs="0" maxOccurs="1" />

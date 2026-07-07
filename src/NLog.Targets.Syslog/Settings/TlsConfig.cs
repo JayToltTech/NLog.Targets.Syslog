@@ -2,6 +2,8 @@
 // See the LICENSE file in the project root for more information
 
 using System;
+using System.Linq;
+using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 
 namespace NLog.Targets.Syslog.Settings
@@ -16,6 +18,7 @@ namespace NLog.Targets.Syslog.Settings
         private StoreName certificateStoreName;
         private X509FindType certificateFilterType;
         private string certificateFilterValue;
+        private string pinnedCaCertificatePath;
 
         /// <summary>Whether to use TLS or not (TLS 1.2 only)</summary>
         public bool Enabled
@@ -60,6 +63,18 @@ namespace NLog.Targets.Syslog.Settings
             set => SetProperty(ref certificateFilterValue, value);
         }
 
+        /// <summary>Path to a CA certificate (PEM or DER) the server certificate chain must terminate at</summary>
+        /// <remarks>
+        /// When set, the server certificate is validated by pinning: the presented chain must build to
+        /// this exact CA, independent of the operating system trust store. When omitted the default
+        /// platform validation (OS trust store) is used.
+        /// </remarks>
+        public string PinnedCaCertificatePath
+        {
+            get => pinnedCaCertificatePath;
+            set => SetProperty(ref pinnedCaCertificatePath, value);
+        }
+
         /// <summary>Builds a new instance of the TlsConfig class</summary>
         public TlsConfig()
         {
@@ -69,6 +84,7 @@ namespace NLog.Targets.Syslog.Settings
             certificateStoreName = StoreName.My;
             certificateFilterType = X509FindType.FindBySubjectName;
             certificateFilterValue = null;
+            pinnedCaCertificatePath = null;
         }
 
         internal X509Certificate2Collection RetrieveClientCertificates()
@@ -86,6 +102,60 @@ namespace NLog.Targets.Syslog.Settings
             {
                 store.Close();
             }
+        }
+
+        /// <summary>
+        /// Builds a server certificate validation callback that pins the chain to
+        /// <see cref="PinnedCaCertificatePath" />, or null to use default platform validation.
+        /// </summary>
+        internal RemoteCertificateValidationCallback BuildServerCertificateValidationCallback()
+        {
+            if (string.IsNullOrEmpty(pinnedCaCertificatePath))
+                return null;
+
+            // Loaded once, at configuration time, so a bad path fails fast and closed.
+            var pinnedCa = new X509Certificate2(pinnedCaCertificatePath);
+
+            return (sender, certificate, chain, sslPolicyErrors) =>
+            {
+                // Hostname mismatch or a missing server certificate are never acceptable,
+                // regardless of which CA signed the chain.
+                if ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) != 0)
+                    return false;
+                if ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateNotAvailable) != 0)
+                    return false;
+                if (certificate == null)
+                    return false;
+
+                using (var pinnedChain = new X509Chain())
+                using (var serverCert = new X509Certificate2(certificate))
+                {
+                    // Match AuthenticateAsClient(checkCertificateRevocation: false).
+                    pinnedChain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
+                    // The internal CA is intentionally NOT in the OS trust store; supply it
+                    // via ExtraStore and tolerate the resulting "untrusted root" status, which
+                    // we replace with an explicit pin check below.
+                    pinnedChain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllowUnknownCertificateAuthority;
+                    pinnedChain.ChainPolicy.ExtraStore.Add(pinnedCa);
+
+                    pinnedChain.Build(serverCert);
+
+                    // Any status other than a clean build or the expected untrusted-root
+                    // (time-invalid, revoked, partial chain, ...) rejects the connection.
+                    var statusAcceptable = pinnedChain.ChainStatus.All(s =>
+                        s.Status == X509ChainStatusFlags.NoError ||
+                        s.Status == X509ChainStatusFlags.UntrustedRoot);
+                    if (!statusAcceptable)
+                        return false;
+
+                    // The chain must actually terminate at the pinned CA.
+                    var elements = pinnedChain.ChainElements;
+                    if (elements.Count == 0)
+                        return false;
+                    var root = elements[elements.Count - 1].Certificate;
+                    return string.Equals(root.Thumbprint, pinnedCa.Thumbprint, StringComparison.OrdinalIgnoreCase);
+                }
+            };
         }
 
         private object BuildFindValue()
