@@ -1,0 +1,8 @@
+# Thresholds for CA1501/CA1502/CA1505/CA1506; the rules stay off unless .editorconfig raises them.
+# CA1502/CA1505 are tight because the code-style standard has a rule about function size.
+# CA1506 is the .NET default: we have no house rule on class coupling, and a tight number
+# fires on orchestrators rather than on sprawl. See the standard's "Thresholds" section.
+CA1501: 4
+CA1502: 15
+CA1505: 20
+CA1506: 95

@@ -1,0 +1,45 @@
+# Tolt .NET analyzer baseline. Copy to the repo root; see Shared/Software/dotnet-analyzer-standard.md.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{cs,csproj,props,targets}]
+indent_style = space
+indent_size = 4
+
+[*.cs]
+# Code-style standard: short functions, shallow nesting (thresholds in CodeMetricsConfig.txt)
+dotnet_diagnostic.CA1501.severity = warning
+dotnet_diagnostic.CA1502.severity = error
+dotnet_diagnostic.CA1505.severity = error
+dotnet_diagnostic.CA1506.severity = warning
+
+# Async in UI and services: no async void, no sync-over-async, no dropped tasks
+dotnet_diagnostic.VSTHRD100.severity = error
+dotnet_diagnostic.VSTHRD002.severity = error
+dotnet_diagnostic.VSTHRD103.severity = error
+dotnet_diagnostic.VSTHRD110.severity = error
+dotnet_diagnostic.VSTHRD200.severity = none
+
+# Check every return value; ConfigureAwait(false) is a library concern, not an app one
+dotnet_diagnostic.CA1806.severity = error
+dotnet_diagnostic.CA2007.severity = none
+
+# Security: every CA3xxx/CA5xxx rule on, plus the banned-API list in BannedSymbols.txt
+dotnet_analyzer_diagnostic.category-Security.severity = warning
+dotnet_diagnostic.RS0030.severity = error
+
+[{Tests,tests,**/Tests,**/tests,**.Tests}/**.cs]
+# xUnit naming is Method_Scenario_Expectation; test methods are instance methods
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA1822.severity = none
+dotnet_diagnostic.CA1502.severity = warning
+dotnet_diagnostic.CA1506.severity = none
+
+[**.Benchmarks/**.cs]
+# BenchmarkDotNet requires public instance benchmark methods
+dotnet_diagnostic.CA1822.severity = none

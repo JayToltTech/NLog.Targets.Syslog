@@ -1,0 +1,7 @@
+T:System.Runtime.Serialization.Formatters.Binary.BinaryFormatter; Deserialization RCE, removed from .NET 9
+T:System.Security.Cryptography.MD5; Broken hash
+T:System.Security.Cryptography.SHA1; Broken hash
+T:System.Security.Cryptography.DES; Broken cipher
+T:System.Security.Cryptography.TripleDES; Deprecated cipher
+T:System.Security.Cryptography.RC2; Broken cipher
+M:System.Net.ServicePointManager.set_ServerCertificateValidationCallback(System.Net.Security.RemoteCertificateValidationCallback); Disables TLS validation process-wide

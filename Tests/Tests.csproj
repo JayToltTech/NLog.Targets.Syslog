@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- net8.0 resolves the library's netstandard2.0 build, so both #if branches run; it rolls forward onto a newer runtime. -->
+    <TargetFrameworks>net10.0;net8.0</TargetFrameworks>
+    <RollForward>Major</RollForward>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" Version="4.0.1" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\NLog.Targets.Syslog\NLog.Targets.Syslog.csproj" />
+  </ItemGroup>
+</Project>
