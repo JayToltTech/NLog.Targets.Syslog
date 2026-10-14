@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Authentication;
@@ -17,13 +18,11 @@ internal sealed class TlsConnection : IDisposable
     private const int KeepAliveProbes = 3;
 #endif
 
-    private readonly TcpClient tcp;
     private readonly SslStream ssl;
     private volatile bool closed;
 
-    private TlsConnection(TcpClient tcp, SslStream ssl)
+    private TlsConnection(SslStream ssl)
     {
-        this.tcp = tcp;
         this.ssl = ssl;
         _ = WatchForCloseAsync();
     }
@@ -32,18 +31,20 @@ internal sealed class TlsConnection : IDisposable
 
     public static async Task<TlsConnection> OpenAsync(TlsEndpoint endpoint, CancellationToken token)
     {
-        var tcp = new TcpClient();
+        var socket = await ConnectAnyAddressAsync(endpoint, token).ConfigureAwait(false);
+        var ssl = new SslStream(new NetworkStream(socket, ownsSocket: true), leaveInnerStreamOpen: false, endpoint.ValidateServerCertificate);
         try
         {
-            ConfigureKeepAlive(tcp.Client);
-            await ConnectAsync(tcp, endpoint, token).ConfigureAwait(false);
-            var ssl = new SslStream(tcp.GetStream(), leaveInnerStreamOpen: false, endpoint.ValidateServerCertificate);
             await AuthenticateAsync(ssl, endpoint, token).ConfigureAwait(false);
-            return new TlsConnection(tcp, ssl);
+            return new TlsConnection(ssl);
         }
         catch
         {
-            tcp.Dispose();
+#if NET
+            await ssl.DisposeAsync().ConfigureAwait(false);
+#else
+            ssl.Dispose();
+#endif
             throw;
         }
     }
@@ -61,7 +62,6 @@ internal sealed class TlsConnection : IDisposable
     {
         closed = true;
         ssl.Dispose();
-        tcp.Dispose();
     }
 
     private async Task WatchForCloseAsync()
@@ -78,23 +78,44 @@ internal sealed class TlsConnection : IDisposable
         closed = true;
     }
 
-    private static async Task ConnectAsync(TcpClient tcp, TlsEndpoint endpoint, CancellationToken token)
+    // A fresh socket per address: .NET 8 on Linux and macOS cannot reuse one after a failed connect.
+    private static async Task<Socket> ConnectAnyAddressAsync(TlsEndpoint endpoint, CancellationToken token)
     {
 #if NET
-        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(token);
-        timeout.CancelAfter(endpoint.ConnectTimeout);
-        await tcp.ConnectAsync(endpoint.Server, endpoint.Port, timeout.Token).ConfigureAwait(false);
+        var addresses = await Dns.GetHostAddressesAsync(endpoint.Server, token).ConfigureAwait(false);
 #else
-        var connect = tcp.ConnectAsync(endpoint.Server, endpoint.Port);
-        var finished = await Task.WhenAny(connect, Task.Delay(endpoint.ConnectTimeout, token)).ConfigureAwait(false);
+        var addresses = await Dns.GetHostAddressesAsync(endpoint.Server).ConfigureAwait(false);
+#endif
+        Exception failure = new SocketException((int)SocketError.HostNotFound);
+        foreach (var address in addresses)
+        {
+            var socket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            try
+            {
+                ConfigureKeepAlive(socket);
+                await ConnectAsync(socket, new IPEndPoint(address, endpoint.Port), endpoint.ConnectTimeout, token).ConfigureAwait(false);
+                return socket;
+            }
+            catch (Exception exception) when (exception is SocketException or TimeoutException)
+            {
+                socket.Dispose();
+                failure = exception;
+            }
+        }
+        throw failure;
+    }
+
+    private static async Task ConnectAsync(Socket socket, IPEndPoint remote, TimeSpan timeout, CancellationToken token)
+    {
+        var connect = socket.ConnectAsync(remote);
+        var finished = await Task.WhenAny(connect, Task.Delay(timeout, token)).ConfigureAwait(false);
         if (finished != connect)
         {
             _ = connect.ContinueWith(t => t.Exception, TaskScheduler.Default);
             token.ThrowIfCancellationRequested();
-            throw new TimeoutException($"Connecting to {endpoint.Server}:{endpoint.Port} timed out");
+            throw new TimeoutException($"Connecting to {remote} timed out");
         }
         await connect.ConfigureAwait(false);
-#endif
     }
 
     private static Task AuthenticateAsync(SslStream ssl, TlsEndpoint endpoint, CancellationToken token)
