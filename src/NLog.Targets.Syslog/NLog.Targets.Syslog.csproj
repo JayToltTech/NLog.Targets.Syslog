@@ -1,62 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net480</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
     <RootNamespace>NLog.Targets.Syslog</RootNamespace>
-    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-    <OutputType>Library</OutputType>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>false</Deterministic>
-    <ContinuousIntegrationBuild>false</ContinuousIntegrationBuild>
-
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>NLog.Targets.Syslog.snk</AssemblyOriginatorKeyFile>
-    <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
-
-    <Product>NLog.Targets.Syslog</Product>
-    <Copyright>Copyright © 2013 - present by Luigi Berrettini and others: https://github.com/luigiberrettini/NLog.Targets.Syslog/graphs/contributors</Copyright>
-    <AssemblyTitle>NLog Syslog target</AssemblyTitle>
     <AssemblyName>NLog.Targets.Syslog</AssemblyName>
-    <AssemblyVersion>0.0.0.0</AssemblyVersion>
-    <FileVersion>0.1.0.0</FileVersion>
-    <InformationalVersion>0.1.0-alpha.1+commitHash</InformationalVersion>
-    <NeutralLanguage>en</NeutralLanguage>
-
-    <Company>Luigi Berrettini</Company>
-    <Authors>Luigi Berrettini</Authors>
-    <PackageId>NLog.Targets.Syslog</PackageId>
-    <Title>NLog.Targets.Syslog</Title>
-    <Description>Custom target for NLog to send logging messages to a Syslog server</Description>
-    <PackageTags>NLog Syslog Log Logging</PackageTags>
-    <Version>0.1.0-alpha.1</Version>
-    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/luigiberrettini/NLog.Targets.Syslog</PackageProjectUrl>
-    <PackageIcon>NLog.Targets.Syslog.png</PackageIcon>
-    <RepositoryUrl>https://github.com/luigiberrettini/NLog.Targets.Syslog</RepositoryUrl>
-    <PackageReleaseNotes>https://github.com/luigiberrettini/NLog.Targets.Syslog/releases/tag/v0.1.0-alpha.1</PackageReleaseNotes>
-    <RepositoryType>Git</RepositoryType>
-
+    <Description>NLog target sending RFC 5424 syslog over TLS (RFC 5425) with optional mutual TLS and CA pinning</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-
-    <DebugType>portable</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <Copyright>Copyright (c) 2026 Tolt Technologies LLC</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
+
   <ItemGroup>
-    <Compile Remove="Settings\SdIdConfig.cs" />
+    <PackageReference Include="NLog" Version="6.2.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NLog" Version="6.1.3" />
-    <PackageReference Include="Polly.Contrib.WaitAndRetry" Version="1.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\NLog.Targets.Syslog.png" Pack="true" PackagePath="" />
-    <None Include="NLog.Targets.Syslog.snk" />
+    <InternalsVisibleTo Include="Tests" />
   </ItemGroup>
 </Project>
