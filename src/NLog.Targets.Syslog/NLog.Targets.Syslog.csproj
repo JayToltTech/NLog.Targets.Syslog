@@ -6,6 +6,8 @@
     <AssemblyName>NLog.Targets.Syslog</AssemblyName>
     <Description>NLog target sending RFC 5424 syslog over TLS (RFC 5425) with optional mutual TLS and CA pinning</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Copyright>Copyright (c) 2026 Tolt Technologies LLC</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
