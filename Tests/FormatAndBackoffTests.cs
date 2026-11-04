@@ -60,6 +60,19 @@ public class FormatAndBackoffTests
     }
 
     [Fact]
+    public void Backoff_DefaultJitterStaysInTheBandAndVaries()
+    {
+        var delays = Enumerable.Range(0, 200).Select(_ =>
+        {
+            var backoff = new Backoff();
+            return backoff.NextDelay(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(10)).TotalMilliseconds;
+        }).ToArray();
+
+        Assert.All(delays, d => Assert.InRange(d, 500, 1000));
+        Assert.True(delays.Distinct().Count() > 100);
+    }
+
+    [Fact]
     public void Backoff_ResetStartsOverAtBaseDelay()
     {
         var backoff = new Backoff(() => 1.0);
