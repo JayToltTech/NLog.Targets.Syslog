@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+using System.Security.Cryptography;
 
 namespace NLog.Targets.Syslog;
 
@@ -25,19 +25,16 @@ internal sealed class Backoff
 
     public void Reset() => Interlocked.Exchange(ref consecutiveFailures, 0);
 
-    [SuppressMessage("Security", "CA5394:Do not use insecure randomness", Justification = "Retry jitter only spreads reconnects; it protects nothing.")]
-    [SuppressMessage("Security", "S2245:Using pseudorandom number generators (PRNGs) is security-sensitive", Justification = "Retry jitter only spreads reconnects; it protects nothing.")]
-    private static Func<double> NewJitterSource()
+    // A CSPRNG costs nothing at reconnect rates and keeps every scanner quiet without a suppression.
+    private static Func<double> NewJitterSource() => () =>
     {
+        var bytes = new byte[4];
 #if NET
-        return Random.Shared.NextDouble;
+        RandomNumberGenerator.Fill(bytes);
 #else
-        var random = new Random();
-        return () =>
-        {
-            lock (random)
-                return random.NextDouble();
-        };
+        using (var rng = RandomNumberGenerator.Create())
+            rng.GetBytes(bytes);
 #endif
-    }
+        return BitConverter.ToUInt32(bytes, 0) / (uint.MaxValue + 1.0);
+    };
 }
