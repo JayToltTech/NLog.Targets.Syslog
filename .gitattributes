@@ -11,6 +11,7 @@
 *.cs text eol=crlf
 *.config text eol=crlf
 *.json text eol=crlf
+packages.lock.json text eol=lf
 *.xsd text eol=crlf
 *.txt text eol=crlf
 
